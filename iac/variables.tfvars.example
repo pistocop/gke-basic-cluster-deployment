@@ -1,0 +1,5 @@
+## Environment variables
+# https://learn.hashicorp.com/tutorials/terraform/sensitive-variables
+
+gcp_project_id = "my-project-id"
+gcp_default_region = "us-central1"

@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: http-echo
+  namespace: dev
+  annotations:
+    cloud.google.com/neg: '{"ingress": true}'
+spec:
+  selector:
+    app.kubernetes.io/name: http-echo
+  ports:
+    - protocol: TCP
+      port: 9201
+      targetPort: 9201
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: http-echo
+  namespace: dev
+  labels:
+    app.kubernetes.io/name: http-echo
+    app: http-echo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: http-echo
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: http-echo
+    spec:
+      containers:
+      - name: http-echo
+        image: hashicorp/http-echo:latest
+        args: ["-listen", ":9201", "-text", "Hello from http-echo in $(K8S_NAMESPACE) namespace!"] # TODO: it doesn't work
+        ports:
+          - containerPort: 9201
+        env:
+          - name: K8S_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+        resources:
+          requests:
+            cpu: "0.1"
+            memory: "0.1Gi"
+          limits:
+            cpu: "0.5"
+            memory: "0.5Gi"
+
+      restartPolicy: Always

@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gshell-deployment
+  namespace: dev
+  labels:
+    app.kubernetes.io/name: gshell
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: gshell
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: gshell
+    spec:
+      containers:
+      - name: gshell
+        image: gcr.io/cloudshell-images/cloudshell:latest # warning: 7.5 GB
+        command: [ "/bin/sh", "-c", "--" ]
+        args: [ "while true; do sleep 30; done;" ]

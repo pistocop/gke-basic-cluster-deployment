@@ -1,0 +1,12 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gechoserver
+  namespace: dev
+spec:
+  rules:
+  defaultBackend:
+    service:
+      name: gechoserver
+      port:
+        number: 8080
